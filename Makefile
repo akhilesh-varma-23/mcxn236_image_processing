@@ -16,14 +16,15 @@ PROJECT     := mcxn236_image_processing
 BUILD_DIR   := build
 OUTPUT_DIR  := output
 
-TOOLCHAIN   := toolchain/bin
-CC          := $(TOOLCHAIN)/arm-none-eabi-gcc.exe
-AS          := $(TOOLCHAIN)/arm-none-eabi-gcc.exe
-OBJCOPY     := $(TOOLCHAIN)/arm-none-eabi-objcopy.exe
-OBJDUMP     := $(TOOLCHAIN)/arm-none-eabi-objdump.exe
-SIZE        := $(TOOLCHAIN)/arm-none-eabi-size.exe
+TOOLCHAIN_DIR := $(CURDIR)/toolchain/bin
 
-LINKER      := linker/MCXN236_flash_ns.ld
+CC          := "$(TOOLCHAIN_DIR)/arm-none-eabi-gcc.exe"
+AS          := "$(TOOLCHAIN_DIR)/arm-none-eabi-gcc.exe"
+OBJCOPY     := "$(TOOLCHAIN_DIR)/arm-none-eabi-objcopy.exe"
+OBJDUMP     := "$(TOOLCHAIN_DIR)/arm-none-eabi-objdump.exe"
+SIZE        := "$(TOOLCHAIN_DIR)/arm-none-eabi-size.exe"
+
+LINKER      := linker/MCXN236_flash.ld
 
 CPU_FLAGS   := -mcpu=cortex-m33 -mthumb
 
@@ -44,7 +45,8 @@ CPPFLAGS    := -Iinclude \
                -Idrivers/include \
                -Idevice \
                -Istartup \
-               -Itoolchain/arm-none-eabi/include
+               -Itoolchain/arm-none-eabi/include \
+			   -DCPU_MCXN236VDF
 
 LDFLAGS     := $(CPU_FLAGS) \
                -T$(LINKER) \
