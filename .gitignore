@@ -1,0 +1,12 @@
+# Build outputs
+build/
+*.o
+*.d
+*.elf
+*.bin
+*.dump
+*.map
+*.vmem
+
+# Local toolchain
+toolchain/
