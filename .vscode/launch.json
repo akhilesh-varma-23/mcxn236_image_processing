@@ -5,14 +5,16 @@
             "name": "Debug MCXN236",
             "type": "cortex-debug",
             "request": "launch",
-            "servertype": "linkserver",
-            "serverpath": "C:/nxp/LinkServer_26.6.137/LinkServer.exe",
+            "cwd": "${workspaceFolder}",
+            "servertype": "pyocd",
+            "serverpath": "${workspaceFolder}/python_env/Scripts/pyocd.exe",
             "device": "MCXN236",
             "interface": "swd",
             "serialNumber": "31P2QOBNENU1K",
             "executable": "${workspaceFolder}/output/mcxn236_image_processing.elf",
-            "runToEntryPoint": "Reset_Handler",
-            "cwd": "${workspaceFolder}",
+            "armToolchainPath": "${workspaceFolder}/toolchain/bin",
+            "runToEntryPoint": "main",
+            "breakAfterReset": true,
             "showDevDebugOutput": "raw"
         }
     ]

@@ -65,6 +65,8 @@ uint32_t SystemCoreClock = DEFAULT_SYSTEM_CLOCK;
    -- SystemInit()
    ---------------------------------------------------------------------------- */
 
+void SystemInitHook(void) __attribute__((weak));
+
 __attribute__ ((weak)) void SystemInit (void) {
 #if ((__FPU_PRESENT == 1) && (__FPU_USED == 1))
   SCB->CPACR |= ((3UL << 10*2) | (3UL << 11*2));    /* set CP10, CP11 Full Access in Secure mode */
@@ -90,8 +92,8 @@ __attribute__ ((weak)) void SystemInit (void) {
     extern void(*const g_pfnVectors[]) (void);
     SCB->VTOR = (uint32_t) &g_pfnVectors;
 #else
-    extern void *__Vectors;
-    SCB->VTOR = (uint32_t) &__Vectors;
+    extern uint32_t __Vectors[];
+	SCB->VTOR = (uint32_t)__Vectors;
 #endif
 #endif
 

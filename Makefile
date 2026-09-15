@@ -35,7 +35,9 @@ CFLAGS      := $(CPU_FLAGS) \
                -Wall \
                -Wextra \
                -Og \
-               -g3
+               -g3 \
+			   -MMD \
+			   -MP
 
 ASFLAGS     := $(CPU_FLAGS) \
                -x assembler-with-cpp \
@@ -45,8 +47,8 @@ CPPFLAGS    := -Iinclude \
                -Idrivers/include \
                -Idevice \
                -Istartup \
-               -Itoolchain/arm-none-eabi/include \
-			   -DCPU_MCXN236VDF
+			   -DCPU_MCXN236VDF \
+			   -D__STARTUP_CLEAR_BSS
 
 LDFLAGS     := $(CPU_FLAGS) \
                -T$(LINKER) \
@@ -57,6 +59,7 @@ LDFLAGS     := $(CPU_FLAGS) \
 
 C_SOURCES := $(wildcard src/*.c) \
              $(wildcard drivers/src/*.c) \
+			 $(wildcard device/*.c) \
              $(wildcard startup/*.c)
 
 ASM_SOURCES := $(wildcard startup/*.S)
@@ -64,6 +67,7 @@ ASM_SOURCES := $(wildcard startup/*.S)
 C_OBJECTS   := $(patsubst %.c,$(BUILD_DIR)/%.o,$(C_SOURCES))
 ASM_OBJECTS := $(patsubst %.S,$(BUILD_DIR)/%.o,$(ASM_SOURCES))
 OBJECTS     := $(C_OBJECTS) $(ASM_OBJECTS)
+DEPS 		:= $(C_OBJECTS:.o=.d)
 
 ELF         := $(OUTPUT_DIR)/$(PROJECT).elf
 BIN         := $(OUTPUT_DIR)/$(PROJECT).bin
@@ -87,7 +91,7 @@ $(BIN): $(ELF) | $(OUTPUT_DIR)
 
 $(DUMP): $(ELF) | $(OUTPUT_DIR)
 	@echo [DUMP] $@
-	$(OBJDUMP) -d -S -x $< > $@
+	$(OBJDUMP) -d -S -x -s $< > $@
 
 $(BUILD_DIR)/%.o: %.c
 	@if not exist "$(dir $@)" mkdir "$(dir $@)"
@@ -112,3 +116,5 @@ clean:
 	@if exist "$(BUILD_DIR)" rmdir /S /Q "$(BUILD_DIR)"
 	@if exist "$(OUTPUT_DIR)" rmdir /S /Q "$(OUTPUT_DIR)"
 	@echo Clean complete.
+
+-include $(DEPS)

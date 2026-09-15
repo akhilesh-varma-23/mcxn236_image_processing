@@ -51,6 +51,11 @@ SECTIONS
     KEEP(*(.isr_vector))     /* Startup code */
     . = ALIGN(4);
   } > m_interrupts
+  ASSERT(SIZEOF(.interrupts) > 0,
+       "Vector table is missing")
+
+  ASSERT(SIZEOF(.interrupts) <= LENGTH(m_interrupts),
+       "Vector table exceeds interrupt region")
 
   /* The program code and other data goes into internal flash */
   .text :
@@ -138,8 +143,9 @@ SECTIONS
     PROVIDE_HIDDEN (__fini_array_end = .);
   } > m_text
 
-  __etext = .;    /* define a global symbol at end of code */
-  __DATA_ROM = .; /* Symbol is used by startup for data initialization */
+  
+  __etext = ALIGN(4);
+  __DATA_ROM = __etext;
 
   .data : AT(__DATA_ROM)
   {
@@ -163,7 +169,7 @@ SECTIONS
   ASSERT(__DATA_END <= text_end, "region m_text overflowed with text and data")
 
   /* Uninitialized data section */
-  .bss :
+  .bss (NOLOAD) :
   {
     /* This is used by the startup in order to initialize the .bss section */
     . = ALIGN(4);
