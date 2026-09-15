@@ -2,19 +2,24 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Debug MCXN236",
+            "name": "Flash and Debug FRDM-MCXN236",
             "type": "cortex-debug",
             "request": "launch",
+
             "cwd": "${workspaceFolder}",
+            "executable": "${workspaceFolder}/output/mcxn236_image_processing.elf",
+
             "servertype": "pyocd",
             "serverpath": "${workspaceFolder}/python_env/Scripts/pyocd.exe",
-            "device": "MCXN236",
+            "targetId": "mcxn236vdf",
             "interface": "swd",
-            "serialNumber": "31P2QOBNENU1K",
-            "executable": "${workspaceFolder}/output/mcxn236_image_processing.elf",
+
             "armToolchainPath": "${workspaceFolder}/toolchain/bin",
+
+            "gdbServerTimeout": 60000,
             "runToEntryPoint": "main",
             "breakAfterReset": true,
+
             "showDevDebugOutput": "raw"
         }
     ]

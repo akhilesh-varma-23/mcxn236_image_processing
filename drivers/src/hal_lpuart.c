@@ -4,11 +4,6 @@ void hal_uart_init(LPUART_Type *base, uint32_t srcClock_Hz)
 {
     status_t status;
     lpuart_config_t uart_cfg;
-    lpuart_timeout_config_t timeout_cfg;
-
-    timeout_cfg.rxExtendedTimeoutValue = 0U;
-    timeout_cfg.txExtendedTimeoutValue = 0U;
-    timeout_cfg.rxCounter0
 
         uart_cfg.baudRate_Bps = 115200U;
     uart_cfg.parityMode = kLPUART_ParityDisabled;
