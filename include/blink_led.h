@@ -1,5 +1,5 @@
-#ifndef MAIN_H
-#define MAIN_H
+#ifndef BLINK_LED_H
+#define BLINK_LED_H
 
 #include <stdint.h>
 
@@ -21,7 +21,7 @@
 #define LED_PORT    PORT4
 
 static void delay(void);
-int main(void);
+int led_blink_main(void);
 
 
-#endif /* MAIN_H */
+#endif /* BLINK_LED_H */

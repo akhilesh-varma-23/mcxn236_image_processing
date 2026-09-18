@@ -1,10 +1,8 @@
 #include "hal_clock.h"
 
-void HAL_CLOCK_Init(void)
+void HAL_CLOCK_Init(clock_ip_name_t clk)
 {
-    /* Enable PORT4 clock for pin multiplexing */
-    CLOCK_EnableClock(kCLOCK_Port4);
+    // Enable the clock for specific IP
+    CLOCK_EnableClock(clk);
 
-    /* Enable GPIO4 clock for GPIO operation */
-    CLOCK_EnableClock(kCLOCK_Gpio4);
 }

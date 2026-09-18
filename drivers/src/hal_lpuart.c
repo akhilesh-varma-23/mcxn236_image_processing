@@ -1,11 +1,12 @@
 #include "hal_lpuart.h"
 
-void hal_uart_init(LPUART_Type *base, uint32_t srcClock_Hz)
+void HAL_uart_init(LPUART_Type *base, uint32_t srcClock_Hz)
 {
     status_t status;
     lpuart_config_t uart_cfg;
 
-        uart_cfg.baudRate_Bps = 115200U;
+    LPUART_GetDefaultConfig(&uart_cfg);
+    uart_cfg.baudRate_Bps = 115200U;
     uart_cfg.parityMode = kLPUART_ParityDisabled;
     uart_cfg.dataBitsCount = kLPUART_EightDataBits;
     uart_cfg.isMsb = false;
@@ -55,17 +56,101 @@ void hal_uart_init(LPUART_Type *base, uint32_t srcClock_Hz)
 }
 
 
-void hal_uart_enableTx(LPUART_Type *base, bool enable)
+void HAL_uart_enableTx(LPUART_Type *base, bool enable)
 {
     LPUART_EnableTx(base, enable);
 }
 
-void hal_uart_enableRx(LPUART_Type *base, bool enable)
+void HAL_uart_enableRx(LPUART_Type *base, bool enable)
 {
     LPUART_EnableRx(base, enable);
 }
 
-void hal_uart_write_data(LPUART_Type *base, uint8_t data)
+void HAL_uart_write_data(LPUART_Type *base, uint8_t data)
 {
+    while ((base->STAT & LPUART_STAT_TDRE_MASK) == 0U)
+    {
+
+    }
     LPUART_WriteByte(base, data);
 }
+
+uint8_t HAL_uart_read_data(LPUART_Type *base)
+{
+    while ((base->STAT & LPUART_STAT_RDRF_MASK) == 0U)
+    {
+
+    }
+    return LPUART_ReadByte(base);
+}
+
+status_t HAL_uart_writeBlocking(LPUART_Type *base, uint8_t *data, size_t length)
+{
+    return LPUART_WriteBlocking(base, data, length);
+}
+
+status_t HAL_uart_readBlocking(LPUART_Type *base, uint8_t *data, size_t length)
+{
+    return LPUART_ReadBlocking(base, data, length);
+}
+
+void HAL_uart_write_string(LPUART_Type *base, const char *string, size_t length)
+{
+    if (string == NULL)
+    {
+        return;
+    }
+
+    while (*string != '\0')
+    {
+        HAL_uart_writeBlocking(base, (const uint8_t *)string, length);
+        string++;
+    }
+}
+
+void HAL_uart_EnableInterrupts(LPUART_Type *base, uint32_t mask)
+{
+    LPUART_EnableInterrupts(base, mask);
+}
+
+void HAL_uart_DisableInterrupts(LPUART_Type *base, uint32_t mask)
+{
+    LPUART_DisableInterrupts(base, mask);
+}
+
+void HAL_uart_TransferStartRingBuffer(LPUART_Type *base,
+                                    lpuart_handle_t *handle,
+                                    uint8_t *ringBuffer,
+                                    size_t ringBufferSize)
+{
+    LPUART_TransferStartRingBuffer(base, handle, ringBuffer,ringBufferSize);
+
+}
+
+status_t HAL_uart_TransferReceiveNonBlocking(LPUART_Type *base,
+                                           lpuart_handle_t *handle,
+                                           uint8_t *data,
+                                           size_t length,
+                                           size_t *receivedBytes)
+{
+    lpuart_transfer_t received_data;
+    received_data.rxData = data;
+    received_data.dataSize = length;
+
+    return LPUART_TransferReceiveNonBlocking(base, handle, &received_data, receivedBytes);
+
+}
+
+void HAL_uart_TransferCreateHandle(LPUART_Type *base,
+                                 lpuart_handle_t *handle,
+                                 lpuart_transfer_callback_t callback,
+                                 void *userData)
+{
+    LPUART_TransferCreateHandle(base, handle, callback, userData);
+}
+
+size_t HAL_uart_TransferGetRxRingBufferLength(LPUART_Type *base, lpuart_handle_t *handle)
+{
+    return  LPUART_TransferGetRxRingBufferLength(base,handle);
+}
+

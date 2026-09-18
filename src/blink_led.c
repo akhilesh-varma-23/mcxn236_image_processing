@@ -66,13 +66,14 @@
 //     }
 // }
 
-#include "main.h"
+#include "blink_led.h"
 
-int main(void)
+int led_blink_main(void)
 {
-    HAL_CLOCK_Init();
+    HAL_CLOCK_Init(kCLOCK_Port4);
+    HAL_CLOCK_Init(kCLOCK_Gpio4);
 
-    HAL_PINMUX_Init(PORT4, 18U);
+    HAL_PINMUX_Init(PORT4, 18U, kPORT_MuxAsGpio);
     HAL_GPIO_Init(GPIO4, 18U);
 
     /* Force P4_18 ON */
